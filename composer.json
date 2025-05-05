@@ -18,7 +18,7 @@
     "symfony/yaml": "^6.4 || ^7.1",
     "tourze/symfony-routing-auto-loader-bundle": "0.0.*",
     "tourze/easy-admin-attribute": "0.1.*",
-    "tourze/easy-admin-extra-bundle": "0.0.*",
+    "tourze/easy-admin-extra-bundle": "0.1.*",
     "tourze/doctrine-snowflake-bundle": "0.0.*",
     "tourze/doctrine-track-bundle": "0.0.*"
   },
