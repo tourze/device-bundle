@@ -16,6 +16,7 @@
     "symfony/framework-bundle": "^6.4",
     "symfony/security-core": "^6.4",
     "symfony/yaml": "^6.4 || ^7.1",
+    "tourze/symfony-routing-auto-loader-bundle": "0.0.*",
     "tourze/easy-admin-attribute": "0.0.*",
     "tourze/easy-admin-extra-bundle": "0.0.*",
     "tourze/doctrine-snowflake-bundle": "0.0.*",

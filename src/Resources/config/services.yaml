@@ -8,3 +8,5 @@ services:
     resource: '../../Controller/'
   DeviceBundle\Repository\:
     resource: '../../Repository/'
+  DeviceBundle\Service\:
+    resource: '../../Service/'

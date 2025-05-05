@@ -1,3 +1,0 @@
-device_controllers:
-  resource: '../../Controller/'
-  type: attribute
