@@ -6,6 +6,8 @@ services:
 
   DeviceBundle\Controller\:
     resource: '../../Controller/'
+  DeviceBundle\DataFixtures\:
+    resource: '../../DataFixtures/'
   DeviceBundle\Repository\:
     resource: '../../Repository/'
   DeviceBundle\Service\:
