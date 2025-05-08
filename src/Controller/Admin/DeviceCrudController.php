@@ -76,30 +76,35 @@ class DeviceCrudController extends AbstractCrudController
             ->add(DateTimeFilter::new('updateTime', '更新时间'));
     }
 
-    public function configureActions(Actions $actions): Actions
+    public function configureActions(\EasyCorp\Bundle\EasyAdminBundle\Config\Actions $actions): \EasyCorp\Bundle\EasyAdminBundle\Config\Actions
     {
-        // 不调用父类方法，而是从零开始配置
-        // 添加CRUD基本操作
-        return $actions
-            // 列表页操作
-            ->add(Crud::PAGE_INDEX, Action::DETAIL)
-            ->add(Crud::PAGE_INDEX, Action::EDIT)
-            ->add(Crud::PAGE_INDEX, Action::DELETE)
+        // 全新配置 Actions
+        $newActions = Actions::new()
+            // 批量操作
+            ->addBatchAction(Action::BATCH_DELETE)
+
+            // 列表页面操作
             ->add(Crud::PAGE_INDEX, Action::NEW)
-            
-            // 详情页操作
+            ->add(Crud::PAGE_INDEX, Action::DETAIL)
+
+            // 详情页面操作
+            ->add(Crud::PAGE_DETAIL, Action::INDEX)
             ->add(Crud::PAGE_DETAIL, Action::EDIT)
             ->add(Crud::PAGE_DETAIL, Action::DELETE)
-            ->update(Crud::PAGE_DETAIL, Action::INDEX, function (Action $action) {
-                return $action->setLabel('返回列表');
-            })
-            
-            // 编辑页操作
+
+            // 编辑页面操作
             ->add(Crud::PAGE_EDIT, Action::SAVE_AND_RETURN)
             ->add(Crud::PAGE_EDIT, Action::SAVE_AND_CONTINUE)
-            
-            // 新建页操作
+
+            // 新建页面操作
             ->add(Crud::PAGE_NEW, Action::SAVE_AND_RETURN)
-            ->add(Crud::PAGE_NEW, Action::SAVE_AND_ADD_ANOTHER);
+            ->add(Crud::PAGE_NEW, Action::SAVE_AND_ADD_ANOTHER)
+
+            // 自定义操作标签
+            ->update(Crud::PAGE_DETAIL, Action::INDEX, function (Action $action) {
+                return $action->setLabel('返回列表');
+            });
+
+        return $newActions;
     }
 }
