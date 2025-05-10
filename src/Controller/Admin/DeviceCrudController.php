@@ -40,6 +40,7 @@ class DeviceCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         yield IdField::new('id', 'ID')
+            ->setMaxLength(9999)
             ->hideOnForm();
 
         yield TextField::new('code', '唯一编码');
