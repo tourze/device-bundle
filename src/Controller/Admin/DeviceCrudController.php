@@ -3,10 +3,13 @@
 namespace DeviceBundle\Controller\Admin;
 
 use DeviceBundle\Entity\Device;
+use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminCrud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
+use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
@@ -15,8 +18,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\BooleanFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\DateTimeFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\TextFilter;
-use Tourze\EasyAdminExtraBundle\Controller\AbstractCrudController;
 
+#[AdminCrud(routePath: '/device/device', routeName: 'device_device')]
 class DeviceCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
@@ -33,6 +36,7 @@ class DeviceCrudController extends AbstractCrudController
             ->setPageTitle('detail', fn(Device $device) => sprintf('设备详情: %s', $device->getCode()))
             ->setPageTitle('edit', fn(Device $device) => sprintf('编辑设备: %s', $device->getCode()))
             ->setPageTitle('new', '添加设备')
+            ->setHelp('index', '管理系统中的所有登录设备信息')
             ->setDefaultSort(['createTime' => 'DESC'])
             ->setSearchFields(['code', 'model', 'name', 'regIp']);
     }
@@ -43,19 +47,34 @@ class DeviceCrudController extends AbstractCrudController
             ->setMaxLength(9999)
             ->hideOnForm();
 
-        yield TextField::new('code', '唯一编码');
-        yield TextField::new('model', '设备型号');
-        yield TextField::new('name', '设备名称');
+        yield TextField::new('code', '唯一编码')
+            ->setHelp('设备的唯一标识符');
+
+        yield TextField::new('model', '设备型号')
+            ->setHelp('设备的型号信息');
+
+        yield TextField::new('name', '设备名称')
+            ->setRequired(false);
+
         yield TextField::new('regIp', '注册IP')
+            ->setHelp('设备首次注册时的IP地址')
             ->hideOnIndex();
 
         yield BooleanField::new('valid', '有效');
 
+        // 用户关联字段仅在详情页显示
+        if ($pageName === Crud::PAGE_DETAIL) {
+            yield AssociationField::new('users', '关联用户')
+                ->hideOnForm();
+        }
+
+        // 用户数量字段仅在列表和详情页显示
         if ($pageName === Crud::PAGE_INDEX || $pageName === Crud::PAGE_DETAIL) {
             yield IntegerField::new('userCount', '用户数')
-                ->formatValue(function ($value, $entity) {
+                ->formatValue(function ($value, Device $entity) {
                     return $entity->getUserCount();
-                });
+                })
+                ->hideOnForm();
         }
 
         yield DateTimeField::new('createTime', '创建时间')
@@ -77,35 +96,16 @@ class DeviceCrudController extends AbstractCrudController
             ->add(DateTimeFilter::new('updateTime', '更新时间'));
     }
 
-    public function configureActions(\EasyCorp\Bundle\EasyAdminBundle\Config\Actions $actions): \EasyCorp\Bundle\EasyAdminBundle\Config\Actions
+    public function configureActions(Actions $actions): Actions
     {
-        // 全新配置 Actions
-        $newActions = Actions::new()
-            // 批量操作
-            ->addBatchAction(Action::BATCH_DELETE)
-
-            // 列表页面操作
-            ->add(Crud::PAGE_INDEX, Action::NEW)
+        return $actions
+            // 添加详情操作到列表页
             ->add(Crud::PAGE_INDEX, Action::DETAIL)
-
-            // 详情页面操作
-            ->add(Crud::PAGE_DETAIL, Action::INDEX)
-            ->add(Crud::PAGE_DETAIL, Action::EDIT)
-            ->add(Crud::PAGE_DETAIL, Action::DELETE)
-
-            // 编辑页面操作
-            ->add(Crud::PAGE_EDIT, Action::SAVE_AND_RETURN)
-            ->add(Crud::PAGE_EDIT, Action::SAVE_AND_CONTINUE)
-
-            // 新建页面操作
-            ->add(Crud::PAGE_NEW, Action::SAVE_AND_RETURN)
-            ->add(Crud::PAGE_NEW, Action::SAVE_AND_ADD_ANOTHER)
-
+            // 重新排序操作按钮
+            ->reorder(Crud::PAGE_INDEX, [Action::DETAIL, Action::EDIT, Action::DELETE])
             // 自定义操作标签
             ->update(Crud::PAGE_DETAIL, Action::INDEX, function (Action $action) {
                 return $action->setLabel('返回列表');
             });
-
-        return $newActions;
     }
 }

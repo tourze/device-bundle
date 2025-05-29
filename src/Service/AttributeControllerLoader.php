@@ -3,6 +3,7 @@
 namespace DeviceBundle\Service;
 
 use DeviceBundle\Controller\Admin\DeviceCrudController;
+use DeviceBundle\Controller\Admin\LoginLogCrudController;
 use Symfony\Bundle\FrameworkBundle\Routing\AttributeRouteControllerLoader;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
@@ -34,6 +35,7 @@ class AttributeControllerLoader extends Loader implements RoutingAutoLoaderInter
     {
         $collection = new RouteCollection();
         $collection->addCollection($this->controllerLoader->load(DeviceCrudController::class));
+        $collection->addCollection($this->controllerLoader->load(LoginLogCrudController::class));
         return $collection;
     }
 }

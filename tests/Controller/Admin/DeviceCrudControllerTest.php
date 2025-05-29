@@ -22,6 +22,6 @@ class DeviceCrudControllerTest extends TestCase
 
     public function testController_shouldExtendAbstractCrudController()
     {
-        $this->assertInstanceOf('Tourze\EasyAdminExtraBundle\Controller\AbstractCrudController', $this->controller);
+        $this->assertInstanceOf('EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController', $this->controller);
     }
 }

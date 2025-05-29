@@ -3,6 +3,7 @@
 namespace DeviceBundle\Service;
 
 use DeviceBundle\Entity\Device;
+use DeviceBundle\Entity\LoginLog;
 use Knp\Menu\ItemInterface;
 use Tourze\EasyAdminMenuBundle\Service\LinkGeneratorInterface;
 use Tourze\EasyAdminMenuBundle\Service\MenuProviderInterface;
@@ -19,9 +20,16 @@ class AdminMenu implements MenuProviderInterface
             $item->addChild('设备管理');
         }
 
-        $item->getChild('设备管理')
+        $deviceMenu = $item->getChild('设备管理');
+
+        $deviceMenu
             ->addChild('设备管理')
             ->setUri($this->linkGenerator->getCurdListPage(Device::class))
             ->setAttribute('icon', 'fas fa-mobile-alt');
+
+        $deviceMenu
+            ->addChild('登录日志')
+            ->setUri($this->linkGenerator->getCurdListPage(LoginLog::class))
+            ->setAttribute('icon', 'fas fa-history');
     }
 }
