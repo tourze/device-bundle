@@ -62,7 +62,7 @@ class AdminMenuTest extends TestCase
         try {
             ($this->adminMenu)($item);
             $this->assertTrue(true); // 如果没有异常抛出，则测试通过
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->fail('调用AdminMenu不应抛出异常: ' . $e->getMessage());
         }
     }
