@@ -31,7 +31,7 @@ class DeviceExtensionTest extends TestCase
         try {
             $this->extension->load($configs, $this->container);
             $this->assertTrue(true); // 如果没有异常抛出，则测试通过
-        } catch  (\Throwable $e) {
+        } catch (\Throwable $e) {
             $this->fail('加载扩展时不应抛出异常: ' . $e->getMessage());
         }
     }
