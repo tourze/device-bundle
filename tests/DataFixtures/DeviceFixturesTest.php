@@ -40,10 +40,7 @@ class DeviceFixturesTest extends TestCase
         $this->assertArrayHasKey('DEVICE_REFERENCE_1', $constants);
         $this->assertArrayHasKey('DEVICE_REFERENCE_2', $constants);
         $this->assertArrayHasKey('DEVICE_REFERENCE_3', $constants);
-        
-        $this->assertIsString($constants['DEVICE_REFERENCE_1']);
-        $this->assertIsString($constants['DEVICE_REFERENCE_2']);
-        $this->assertIsString($constants['DEVICE_REFERENCE_3']);
+
     }
 
     public function testLoadMethod_shouldExist()

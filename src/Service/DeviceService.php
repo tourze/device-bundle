@@ -21,7 +21,7 @@ class DeviceService
     public function register(string $model, string $code): Device
     {
         $device = $this->deviceRepository->findOneBy(['code' => $code]);
-        if (!$device) {
+        if ($device === null) {
             $device = new Device();
             $device->setCode($code);
             $device->setModel($model);

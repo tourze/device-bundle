@@ -12,16 +12,12 @@ class AdminMenuTest extends TestCase
     private AdminMenu $adminMenu;
 
     protected function setUp(): void
-    {
-        /** @var LinkGeneratorInterface $linkGenerator */
-        $linkGenerator = $this->createMock(LinkGeneratorInterface::class);
+    {        $linkGenerator = $this->createMock(LinkGeneratorInterface::class);
         $this->adminMenu = new AdminMenu($linkGenerator);
     }
 
     public function testConstruct_shouldAcceptLinkGenerator()
-    {
-        /** @var LinkGeneratorInterface $linkGenerator */
-        $linkGenerator = $this->createMock(LinkGeneratorInterface::class);
+    {        $linkGenerator = $this->createMock(LinkGeneratorInterface::class);
         $adminMenu = new AdminMenu($linkGenerator);
 
         $this->assertInstanceOf(AdminMenu::class, $adminMenu);

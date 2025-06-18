@@ -9,9 +9,7 @@ use PHPUnit\Framework\TestCase;
 class LoginLogRepositoryTest extends TestCase
 {
     public function testConstructor_shouldUseLoginLogEntityClass()
-    {
-        /** @var ManagerRegistry $registry */
-        $registry = $this->createMock(ManagerRegistry::class);
+    {        $registry = $this->createMock(ManagerRegistry::class);
         $repository = new LoginLogRepository($registry);
 
         // 使用方法反射来验证
@@ -27,9 +25,7 @@ class LoginLogRepositoryTest extends TestCase
     }
 
     public function testRepository_shouldExtendServiceEntityRepository()
-    {
-        /** @var ManagerRegistry $registry */
-        $registry = $this->createMock(ManagerRegistry::class);
+    {        $registry = $this->createMock(ManagerRegistry::class);
         $repository = new LoginLogRepository($registry);
 
         $this->assertInstanceOf('Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository', $repository);

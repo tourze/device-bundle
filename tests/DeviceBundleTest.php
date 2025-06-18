@@ -18,8 +18,6 @@ class DeviceBundleTest extends TestCase
     {
         $bundle = new DeviceBundle();
         $path = $bundle->getPath();
-
-        $this->assertIsString($path);
         $this->assertDirectoryExists($path);
         $this->assertStringContainsString('device-bundle', $path);
     }

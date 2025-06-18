@@ -3,11 +3,9 @@
 namespace DeviceBundle\Entity;
 
 use DeviceBundle\Repository\LoginLogRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Tourze\DoctrineIndexedBundle\Attribute\IndexColumn;
-use Tourze\DoctrineTimestampBundle\Attribute\CreateTimeColumn;
+use Tourze\DoctrineTimestampBundle\Traits\CreateTimeAware;
 use Tourze\EasyAdmin\Attribute\Action\BatchDeletable;
 use Tourze\EasyAdmin\Attribute\Action\Deletable;
 use Tourze\EasyAdmin\Attribute\Column\ListColumn;
@@ -25,11 +23,13 @@ use Tourze\ScheduleEntityCleanBundle\Attribute\AsScheduleClean;
 #[AsScheduleClean(expression: '0 4 * * *', defaultKeepDay: 30)]
 #[ORM\Entity(repositoryClass: LoginLogRepository::class)]
 #[ORM\Table(name: 'device_login_log', options:["comment" => "登录日志"])]
-class LoginLog
+class LoginLog implements \Stringable
 {
+    use CreateTimeAware;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(options: ['comment' => 'ID'])]
     private ?int $id = null;
 
     #[ListColumn(title: '用户')]
@@ -56,7 +56,7 @@ class LoginLog
     #[ORM\Column(name: 'login_channel', length: 128, nullable: true, options: ['comment' => '登录渠道'])]
     private ?string $channel = null;
 
-    #[ORM\Column(name: 'systemVersion', length: 512, nullable: true)]
+    #[ORM\Column(name: 'systemVersion', length: 512, nullable: true, options: ['comment' => '系统版本'])]
     private ?string $systemVersion = null;
 
     #[Filterable]
@@ -68,7 +68,7 @@ class LoginLog
     #[ORM\Column(name: 'ip_City', length: 128, nullable: true, options: ['comment' => '地区'])]
     private ?string $ipCity = null;
 
-    #[ORM\Column(length: 128, nullable: true)]
+    #[ORM\Column(length: 128, nullable: true, options: ['comment' => 'IP位置'])]
     private ?string $ipLocation = null;
 
     #[Filterable]
@@ -76,17 +76,18 @@ class LoginLog
     #[ORM\Column(length: 256, nullable: true, options: ['comment' => '设备型号'])]
     private ?string $phoneModel = null;
 
-    #[ORM\Column(name: 'netType', length: 128, nullable: true)]
+    #[ORM\Column(name: 'netType', length: 128, nullable: true, options: ['comment' => '网络类型'])]
     private ?string $netType = null;
 
-    #[IndexColumn]
-    #[CreateTimeColumn]
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true, options: ['comment' => '创建时间'])]
-    private ?\DateTimeInterface $createTime = null;
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function __toString(): string
+    {
+        return "LoginLog #{$this->id}";
     }
 
     public function getUser(): ?UserInterface
@@ -221,13 +222,4 @@ class LoginLog
         return $this;
     }
 
-    public function setCreateTime(?\DateTimeInterface $createdAt): void
-    {
-        $this->createTime = $createdAt;
-    }
-
-    public function getCreateTime(): ?\DateTimeInterface
-    {
-        return $this->createTime;
-    }
 }

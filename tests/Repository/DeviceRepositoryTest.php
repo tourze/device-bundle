@@ -21,7 +21,6 @@ class DeviceRepositoryTest extends TestCase
         $this->assertEquals('registry', $parameters[0]->getName());
 
         // 确认DeviceRepository与Device关联
-        $this->assertTrue(method_exists(DeviceRepository::class, 'find'));
         $this->assertStringContainsString('Device', DeviceRepository::class);
     }
 
@@ -36,9 +35,6 @@ class DeviceRepositoryTest extends TestCase
     public function testRepositoryMethods_shouldBeAvailable()
     {
         // 验证继承自ServiceEntityRepository的基本方法是否可用
-        $this->assertTrue(method_exists(DeviceRepository::class, 'find'));
-        $this->assertTrue(method_exists(DeviceRepository::class, 'findAll'));
-        $this->assertTrue(method_exists(DeviceRepository::class, 'findBy'));
-        $this->assertTrue(method_exists(DeviceRepository::class, 'findOneBy'));
+        $this->assertInstanceOf(\Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository::class, new DeviceRepository($this->createMock(\Doctrine\Persistence\ManagerRegistry::class)));
     }
 }

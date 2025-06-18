@@ -123,7 +123,7 @@ class DeviceTest extends TestCase
     public function testSetGetCreateTime()
     {
         $device = new Device();
-        $now = new \DateTime();
+        $now = new \DateTimeImmutable();
 
         $device->setCreateTime($now);
         $this->assertSame($now, $device->getCreateTime());
@@ -135,7 +135,7 @@ class DeviceTest extends TestCase
     public function testSetGetUpdateTime()
     {
         $device = new Device();
-        $now = new \DateTime();
+        $now = new \DateTimeImmutable();
 
         $device->setUpdateTime($now);
         $this->assertSame($now, $device->getUpdateTime());
@@ -300,9 +300,7 @@ class DeviceTest extends TestCase
         $users = [];
 
         // 添加100个用户
-        for ($i = 0; $i < 100; $i++) {
-            /** @var UserInterface $user */
-            $user = $this->createMock(UserInterface::class);
+        for ($i = 0; $i < 100; $i++) {        $user = $this->createMock(UserInterface::class);
             $users[] = $user;
             $device->addUser($user);
         }
@@ -321,11 +319,7 @@ class DeviceTest extends TestCase
 
     public function testRemoveUser_withNonExistentUser_shouldNotThrowException()
     {
-        $device = new Device();
-        /** @var UserInterface $user1 */
-        $user1 = $this->createMock(UserInterface::class);
-        /** @var UserInterface $user2 */
-        $user2 = $this->createMock(UserInterface::class);
+        $device = new Device();        $user1 = $this->createMock(UserInterface::class);        $user2 = $this->createMock(UserInterface::class);
 
         $device->addUser($user1);
         $this->assertCount(1, $device->getUsers());
@@ -337,9 +331,7 @@ class DeviceTest extends TestCase
 
     public function testChainedSetters_shouldAllowCompleteConfiguration()
     {
-        $device = new Device();
-        /** @var UserInterface $user */
-        $user = $this->createMock(UserInterface::class);
+        $device = new Device();        $user = $this->createMock(UserInterface::class);
         $createTime = new \DateTime();
         $updateTime = new \DateTime();
 

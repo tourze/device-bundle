@@ -10,8 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Tourze\DoctrineIndexedBundle\Attribute\IndexColumn;
 use Tourze\DoctrineSnowflakeBundle\Service\SnowflakeIdGenerator;
-use Tourze\DoctrineTimestampBundle\Attribute\CreateTimeColumn;
-use Tourze\DoctrineTimestampBundle\Attribute\UpdateTimeColumn;
 use Tourze\DoctrineTimestampBundle\Traits\TimestampableAware;
 use Tourze\DoctrineTrackBundle\Attribute\TrackColumn;
 use Tourze\EasyAdmin\Attribute\Column\ListColumn;
@@ -52,17 +50,14 @@ class Device implements \Stringable
     #[ORM\Column(length: 45, nullable: true, options: ['comment' => '注册IP'])]
     private ?string $regIp = null;
 
-    #[IndexColumn]
-    #[CreateTimeColumn]
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true, options: ['comment' => '创建时间'])]#[UpdateTimeColumn]
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true, options: ['comment' => '更新时间'])]public function __construct()
+    public function __construct()
     {
         $this->users = new ArrayCollection();
     }
 
     public function __toString(): string
     {
-        if (!$this->getId()) {
+        if ($this->getId() === null) {
             return '';
         }
 
