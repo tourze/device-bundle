@@ -7,9 +7,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Tourze\DoctrineTimestampBundle\Traits\CreateTimeAware;
 use Tourze\EasyAdmin\Attribute\Action\BatchDeletable;
-use Tourze\EasyAdmin\Attribute\Action\Deletable;
-use Tourze\EasyAdmin\Attribute\Column\ListColumn;
-use Tourze\EasyAdmin\Attribute\Filter\Filterable;
 use Tourze\EasyAdmin\Attribute\Permission\AsPermission;
 use Tourze\OperationSystemEnum\Platform;
 use Tourze\ScheduleEntityCleanBundle\Attribute\AsScheduleClean;
@@ -18,7 +15,6 @@ use Tourze\ScheduleEntityCleanBundle\Attribute\AsScheduleClean;
  * 这个本质是设备登录记录
  */
 #[AsPermission('登录日志')]
-#[Deletable]
 #[BatchDeletable]
 #[AsScheduleClean(expression: '0 4 * * *', defaultKeepDay: 30)]
 #[ORM\Entity(repositoryClass: LoginLogRepository::class)]
@@ -32,47 +28,34 @@ class LoginLog implements \Stringable
     #[ORM\Column(options: ['comment' => 'ID'])]
     private ?int $id = null;
 
-    #[ListColumn(title: '用户')]
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?UserInterface $user = null;
 
-    #[Filterable]
-    #[ListColumn]
     #[ORM\Column(length: 39, nullable: true, options: ['comment' => '登录IP'])]
     private ?string $loginIp = null;
 
-    #[Filterable]
-    #[ListColumn]
     #[ORM\Column(name: 'login_platform', length: 128, nullable: true, enumType: Platform::class, options: ['comment' => '登录平台'])]
     private ?Platform $platform = null;
 
-    #[Filterable]
-    #[ListColumn]
     #[ORM\Column(name: 'login_imei', length: 128, nullable: true, options: ['comment' => '登录IMEI'])]
     private ?string $imei = null;
 
-    #[ListColumn]
     #[ORM\Column(name: 'login_channel', length: 128, nullable: true, options: ['comment' => '登录渠道'])]
     private ?string $channel = null;
 
     #[ORM\Column(name: 'systemVersion', length: 512, nullable: true, options: ['comment' => '系统版本'])]
     private ?string $systemVersion = null;
 
-    #[Filterable]
-    #[ListColumn(sorter: true)]
     #[ORM\Column(length: 32, nullable: true, options: ['comment' => 'APP版本'])]
     private ?string $version = null;
 
-    #[ListColumn]
     #[ORM\Column(name: 'ip_City', length: 128, nullable: true, options: ['comment' => '地区'])]
     private ?string $ipCity = null;
 
     #[ORM\Column(length: 128, nullable: true, options: ['comment' => 'IP位置'])]
     private ?string $ipLocation = null;
 
-    #[Filterable]
-    #[ListColumn]
     #[ORM\Column(length: 256, nullable: true, options: ['comment' => '设备型号'])]
     private ?string $phoneModel = null;
 
