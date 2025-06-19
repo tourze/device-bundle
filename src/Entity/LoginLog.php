@@ -6,7 +6,6 @@ use DeviceBundle\Repository\LoginLogRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Tourze\DoctrineTimestampBundle\Traits\CreateTimeAware;
-use Tourze\EasyAdmin\Attribute\Action\BatchDeletable;
 use Tourze\EasyAdmin\Attribute\Permission\AsPermission;
 use Tourze\OperationSystemEnum\Platform;
 use Tourze\ScheduleEntityCleanBundle\Attribute\AsScheduleClean;
@@ -15,7 +14,6 @@ use Tourze\ScheduleEntityCleanBundle\Attribute\AsScheduleClean;
  * 这个本质是设备登录记录
  */
 #[AsPermission('登录日志')]
-#[BatchDeletable]
 #[AsScheduleClean(expression: '0 4 * * *', defaultKeepDay: 30)]
 #[ORM\Entity(repositoryClass: LoginLogRepository::class)]
 #[ORM\Table(name: 'device_login_log', options:["comment" => "登录日志"])]
