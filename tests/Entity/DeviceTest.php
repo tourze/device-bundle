@@ -233,7 +233,7 @@ class DeviceTest extends TestCase
     public function testCreateTime_withDifferentDateFormats_shouldWork()
     {
         $device = new Device();
-        
+
         // 测试不同的日期格式
         $dates = [
             new \DateTime('2024-01-01 00:00:00'),
@@ -250,7 +250,7 @@ class DeviceTest extends TestCase
     public function testUpdateTime_withDifferentDateFormats_shouldWork()
     {
         $device = new Device();
-        
+
         // 测试不同的日期格式
         $dates = [
             new \DateTime('2024-01-01 00:00:00'),
@@ -300,7 +300,8 @@ class DeviceTest extends TestCase
         $users = [];
 
         // 添加100个用户
-        for ($i = 0; $i < 100; $i++) {        $user = $this->createMock(UserInterface::class);
+        for ($i = 0; $i < 100; $i++) {
+            $user = $this->createMock(UserInterface::class);
             $users[] = $user;
             $device->addUser($user);
         }
@@ -319,7 +320,9 @@ class DeviceTest extends TestCase
 
     public function testRemoveUser_withNonExistentUser_shouldNotThrowException()
     {
-        $device = new Device();        $user1 = $this->createMock(UserInterface::class);        $user2 = $this->createMock(UserInterface::class);
+        $device = new Device();
+        $user1 = $this->createMock(UserInterface::class);
+        $user2 = $this->createMock(UserInterface::class);
 
         $device->addUser($user1);
         $this->assertCount(1, $device->getUsers());
@@ -331,9 +334,9 @@ class DeviceTest extends TestCase
 
     public function testChainedSetters_shouldAllowCompleteConfiguration()
     {
-        $device = new Device();        $user = $this->createMock(UserInterface::class);
-        $createTime = new \DateTime();
-        $updateTime = new \DateTime();
+        $device = new Device();
+        $createTime = new \DateTimeImmutable();
+        $updateTime = new \DateTimeImmutable();
 
         $result = $device
             ->setCode('CHAIN001')
