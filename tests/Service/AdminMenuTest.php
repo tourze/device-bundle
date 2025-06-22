@@ -30,7 +30,9 @@ class AdminMenuTest extends TestCase
 
     public function testInvoke_shouldBeCallable()
     {
-        $this->assertTrue(is_callable($this->adminMenu));
+        // AdminMenu实现了__invoke方法，所以是可调用的
+        $reflection = new \ReflectionClass(AdminMenu::class);
+        $this->assertTrue($reflection->hasMethod('__invoke'));
     }
 
     public function testInvoke_withBasicItem_shouldNotThrowException()

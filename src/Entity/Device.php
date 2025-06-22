@@ -12,7 +12,6 @@ use Tourze\DoctrineIndexedBundle\Attribute\IndexColumn;
 use Tourze\DoctrineSnowflakeBundle\Service\SnowflakeIdGenerator;
 use Tourze\DoctrineTimestampBundle\Traits\TimestampableAware;
 use Tourze\DoctrineTrackBundle\Attribute\TrackColumn;
-use Tourze\EasyAdmin\Attribute\Column\ListColumn;
 
 #[ORM\Entity(repositoryClass: DeviceRepository::class)]
 #[ORM\Table(name: 'ims_device', options: ['comment' => '登录设备'])]
@@ -149,7 +148,8 @@ class Device implements \Stringable
         $this->valid = $valid;
 
         return $this;
-    }#[ListColumn(title: '用户数')]
+    }
+
     public function getUserCount(): int
     {
         return $this->getUsers()->count();

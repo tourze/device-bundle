@@ -236,8 +236,8 @@ class DeviceTest extends TestCase
 
         // 测试不同的日期格式
         $dates = [
-            new \DateTime('2024-01-01 00:00:00'),
-            new \DateTime('2024-12-31 23:59:59'),
+            new \DateTimeImmutable('2024-01-01 00:00:00'),
+            new \DateTimeImmutable('2024-12-31 23:59:59'),
             new \DateTimeImmutable('2024-06-15 12:30:45'),
         ];
 
@@ -253,8 +253,8 @@ class DeviceTest extends TestCase
 
         // 测试不同的日期格式
         $dates = [
-            new \DateTime('2024-01-01 00:00:00'),
-            new \DateTime('2024-12-31 23:59:59'),
+            new \DateTimeImmutable('2024-01-01 00:00:00'),
+            new \DateTimeImmutable('2024-12-31 23:59:59'),
             new \DateTimeImmutable('2024-06-15 12:30:45'),
         ];
 

@@ -20,7 +20,6 @@ class LoginLogRepositoryTest extends TestCase
         $this->assertEquals('registry', $parameters[0]->getName());
 
         // 确认LoginLogRepository与LoginLog关联
-        $this->assertTrue(method_exists(LoginLogRepository::class, 'find'));
         $this->assertStringContainsString('LoginLog', LoginLogRepository::class);
     }
 
@@ -33,18 +32,15 @@ class LoginLogRepositoryTest extends TestCase
 
     public function testRepositoryMethods_shouldBeAvailable()
     {
+        $registry = $this->createMock(ManagerRegistry::class);
+        $repository = new LoginLogRepository($registry);
+        
         // 验证继承自ServiceEntityRepository的基本方法是否可用
-        $this->assertTrue(method_exists(LoginLogRepository::class, 'find'));
-        $this->assertTrue(method_exists(LoginLogRepository::class, 'findAll'));
-        $this->assertTrue(method_exists(LoginLogRepository::class, 'findBy'));
-        $this->assertTrue(method_exists(LoginLogRepository::class, 'findOneBy'));
+        $this->assertInstanceOf('Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository', $repository);
     }
 
     public function testFindLastByUserMethod_shouldExist()
     {
-        // 验证findLastByUser方法存在
-        $this->assertTrue(method_exists(LoginLogRepository::class, 'findLastByUser'));
-        
         // 验证方法签名
         $reflection = new \ReflectionMethod(LoginLogRepository::class, 'findLastByUser');
         $parameters = $reflection->getParameters();
