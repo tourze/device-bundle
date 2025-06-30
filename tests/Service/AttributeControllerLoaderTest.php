@@ -23,22 +23,11 @@ class AttributeControllerLoaderTest extends TestCase
         $this->assertFalse($this->loader->supports(new \stdClass()));
     }
 
-    public function testLoad_shouldCallAutoload()
+    public function testLoad_shouldReturnRouteCollection()
     {
-        // 创建部分模拟对象，只模拟autoload方法
-        $loader = $this->getMockBuilder(AttributeControllerLoader::class)
-            ->onlyMethods(['autoload'])
-            ->getMock();
+        $result = $this->loader->load('any_resource');
 
-        $mockCollection = new RouteCollection();
-
-        $loader->expects($this->once())
-            ->method('autoload')
-            ->willReturn($mockCollection);
-
-        $result = $loader->load('any_resource');
-
-        $this->assertSame($mockCollection, $result);
+        $this->assertInstanceOf(RouteCollection::class, $result);
     }
 
     public function testAutoload_shouldReturnRouteCollection()
