@@ -6,13 +6,12 @@ use DeviceBundle\Entity\LoginLog;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Tourze\PHPUnitSymfonyKernelTest\Attribute\AsRepository;
 
 /**
- * @method LoginLog|null find($id, $lockMode = null, $lockVersion = null)
- * @method LoginLog|null findOneBy(array $criteria, array $orderBy = null)
- * @method LoginLog[]    findAll()
- * @method LoginLog[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @extends ServiceEntityRepository<LoginLog>
  */
+#[AsRepository(entityClass: LoginLog::class)]
 class LoginLogRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -20,14 +19,34 @@ class LoginLogRepository extends ServiceEntityRepository
         parent::__construct($registry, LoginLog::class);
     }
 
+    public function save(LoginLog $entity, bool $flush = true): void
+    {
+        $this->getEntityManager()->persist($entity);
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function remove(LoginLog $entity, bool $flush = true): void
+    {
+        $this->getEntityManager()->remove($entity);
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
     public function findLastByUser(UserInterface $user): ?LoginLog
     {
-        return $this->createQueryBuilder('l')
+        $result = $this->createQueryBuilder('l')
             ->andWhere('l.user = :user')
             ->setParameter('user', $user)
             ->orderBy('l.id', 'DESC')
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
+
+        assert($result instanceof LoginLog || $result === null);
+
+        return $result;
     }
 }

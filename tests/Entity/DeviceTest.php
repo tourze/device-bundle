@@ -3,26 +3,76 @@
 namespace DeviceBundle\Tests\Entity;
 
 use DeviceBundle\Entity\Device;
+use DeviceBundle\Enum\DeviceStatus;
+use DeviceBundle\Enum\DeviceType;
 use Doctrine\Common\Collections\ArrayCollection;
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Tourze\PHPUnitDoctrineEntity\AbstractEntityTestCase;
 
-class DeviceTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(Device::class)]
+final class DeviceTest extends AbstractEntityTestCase
 {
-    public function testConstruct_shouldInitializeUsers()
+    /**
+     * 创建 UserInterface 的测试实现
+     *
+     * @param non-empty-string $userIdentifier 用户标识符
+     * @param array<string> $roles 用户角色数组
+     */
+    private function createUserForTesting(string $userIdentifier = 'test-user', array $roles = ['ROLE_USER']): UserInterface
+    {
+        return new class($userIdentifier, $roles) implements UserInterface {
+            /**
+             * @param non-empty-string $userIdentifier
+             * @param array<string> $roles
+             */
+            public function __construct(
+                private readonly string $userIdentifier,
+                private readonly array $roles,
+            ) {
+            }
+
+            /** @return non-empty-string */
+            public function getUserIdentifier(): string
+            {
+                return $this->userIdentifier;
+            }
+
+            /** @return array<string> */
+            public function getRoles(): array
+            {
+                return $this->roles;
+            }
+
+            public function eraseCredentials(): void
+            {
+                // 空实现 - stub 不需要真正的凭据管理
+            }
+        };
+    }
+
+    protected function createEntity(): object
+    {
+        return new Device();
+    }
+
+    public function testConstructShouldInitializeUsers(): void
     {
         $device = new Device();
         $this->assertInstanceOf(ArrayCollection::class, $device->getUsers());
         $this->assertCount(0, $device->getUsers());
     }
 
-    public function testToString_withoutId_shouldReturnEmptyString()
+    public function testToStringWithoutIdShouldReturnEmptyString(): void
     {
         $device = new Device();
-        $this->assertSame('', (string)$device);
+        $this->assertSame('', (string) $device);
     }
 
-    public function testToString_withIdAndAttributes_shouldReturnFormattedString()
+    public function testToStringWithIdAndAttributesShouldReturnFormattedString(): void
     {
         $device = new Device();
         $reflection = new \ReflectionClass(Device::class);
@@ -34,10 +84,10 @@ class DeviceTest extends TestCase
         $device->setCode('DEVICE001');
         $device->setName('Test Device');
 
-        $this->assertSame('DEVICE001 | Test Device', (string)$device);
+        $this->assertSame('DEVICE001 | Test Device', (string) $device);
     }
 
-    public function testSetGetId()
+    public function testSetGetId(): void
     {
         $device = new Device();
         $reflection = new \ReflectionClass(Device::class);
@@ -49,21 +99,21 @@ class DeviceTest extends TestCase
         $this->assertSame('123456789', $device->getId());
     }
 
-    public function testSetGetCode()
+    public function testSetGetCode(): void
     {
         $device = new Device();
         $device->setCode('DEVICE001');
         $this->assertSame('DEVICE001', $device->getCode());
     }
 
-    public function testSetGetModel()
+    public function testSetGetModel(): void
     {
         $device = new Device();
         $device->setModel('TestModel');
         $this->assertSame('TestModel', $device->getModel());
     }
 
-    public function testSetGetName()
+    public function testSetGetName(): void
     {
         $device = new Device();
         $device->setName('Test Device');
@@ -73,10 +123,10 @@ class DeviceTest extends TestCase
         $this->assertNull($device->getName());
     }
 
-    public function testAddRemoveUser()
+    public function testAddRemoveUser(): void
     {
         $device = new Device();
-        $user = $this->createMock(UserInterface::class);
+        $user = $this->createUserForTesting('test_user');
 
         $device->addUser($user);
         $this->assertCount(1, $device->getUsers());
@@ -87,10 +137,10 @@ class DeviceTest extends TestCase
         $this->assertFalse($device->getUsers()->contains($user));
     }
 
-    public function testAddUser_withExistingUser_shouldNotAddDuplicate()
+    public function testAddUserWithExistingUserShouldNotAddDuplicate(): void
     {
         $device = new Device();
-        $user = $this->createMock(UserInterface::class);
+        $user = $this->createUserForTesting('test_user');
 
         $device->addUser($user);
         $device->addUser($user); // 添加相同的用户第二次
@@ -98,7 +148,7 @@ class DeviceTest extends TestCase
         $this->assertCount(1, $device->getUsers());
     }
 
-    public function testSetGetRegIp()
+    public function testSetGetRegIp(): void
     {
         $device = new Device();
         $device->setRegIp('127.0.0.1');
@@ -108,7 +158,7 @@ class DeviceTest extends TestCase
         $this->assertNull($device->getRegIp());
     }
 
-    public function testSetGetValid()
+    public function testSetGetValid(): void
     {
         $device = new Device();
         $this->assertFalse($device->isValid());
@@ -120,7 +170,7 @@ class DeviceTest extends TestCase
         $this->assertNull($device->isValid());
     }
 
-    public function testSetGetCreateTime()
+    public function testSetGetCreateTime(): void
     {
         $device = new Device();
         $now = new \DateTimeImmutable();
@@ -132,7 +182,7 @@ class DeviceTest extends TestCase
         $this->assertNull($device->getCreateTime());
     }
 
-    public function testSetGetUpdateTime()
+    public function testSetGetUpdateTime(): void
     {
         $device = new Device();
         $now = new \DateTimeImmutable();
@@ -144,13 +194,13 @@ class DeviceTest extends TestCase
         $this->assertNull($device->getUpdateTime());
     }
 
-    public function testGetUserCount()
+    public function testGetUserCount(): void
     {
         $device = new Device();
         $this->assertSame(0, $device->getUserCount());
 
-        $user1 = $this->createMock(UserInterface::class);
-        $user2 = $this->createMock(UserInterface::class);
+        $user1 = $this->createUserForTesting('test_user_1');
+        $user2 = $this->createUserForTesting('test_user_2');
 
         $device->addUser($user1);
         $this->assertSame(1, $device->getUserCount());
@@ -162,14 +212,14 @@ class DeviceTest extends TestCase
         $this->assertSame(1, $device->getUserCount());
     }
 
-    public function testSetCode_withEmptyString_shouldSetEmptyString()
+    public function testSetCodeWithEmptyStringShouldSetEmptyString(): void
     {
         $device = new Device();
         $device->setCode('');
         $this->assertSame('', $device->getCode());
     }
 
-    public function testSetCode_withLongString_shouldSetLongString()
+    public function testSetCodeWithLongStringShouldSetLongString(): void
     {
         $device = new Device();
         $longCode = str_repeat('A', 120); // 最大长度测试
@@ -177,14 +227,14 @@ class DeviceTest extends TestCase
         $this->assertSame($longCode, $device->getCode());
     }
 
-    public function testSetModel_withEmptyString_shouldSetEmptyString()
+    public function testSetModelWithEmptyStringShouldSetEmptyString(): void
     {
         $device = new Device();
         $device->setModel('');
         $this->assertSame('', $device->getModel());
     }
 
-    public function testSetModel_withLongString_shouldSetLongString()
+    public function testSetModelWithLongStringShouldSetLongString(): void
     {
         $device = new Device();
         $longModel = str_repeat('M', 200); // 最大长度测试
@@ -192,14 +242,14 @@ class DeviceTest extends TestCase
         $this->assertSame($longModel, $device->getModel());
     }
 
-    public function testSetName_withEmptyString_shouldSetEmptyString()
+    public function testSetNameWithEmptyStringShouldSetEmptyString(): void
     {
         $device = new Device();
         $device->setName('');
         $this->assertSame('', $device->getName());
     }
 
-    public function testSetName_withLongString_shouldSetLongString()
+    public function testSetNameWithLongStringShouldSetLongString(): void
     {
         $device = new Device();
         $longName = str_repeat('N', 100); // 最大长度测试
@@ -207,14 +257,14 @@ class DeviceTest extends TestCase
         $this->assertSame($longName, $device->getName());
     }
 
-    public function testSetRegIp_withEmptyString_shouldSetEmptyString()
+    public function testSetRegIpWithEmptyStringShouldSetEmptyString(): void
     {
         $device = new Device();
         $device->setRegIp('');
         $this->assertSame('', $device->getRegIp());
     }
 
-    public function testSetRegIp_withIPv6_shouldSetIPv6()
+    public function testSetRegIpWithIPv6ShouldSetIPv6(): void
     {
         $device = new Device();
         $ipv6 = '2001:0db8:85a3:0000:0000:8a2e:0370:7334';
@@ -222,7 +272,7 @@ class DeviceTest extends TestCase
         $this->assertSame($ipv6, $device->getRegIp());
     }
 
-    public function testSetRegIp_withMaxLength_shouldSetMaxLength()
+    public function testSetRegIpWithMaxLengthShouldSetMaxLength(): void
     {
         $device = new Device();
         $maxLengthIp = str_repeat('1', 45); // 最大长度测试
@@ -230,7 +280,7 @@ class DeviceTest extends TestCase
         $this->assertSame($maxLengthIp, $device->getRegIp());
     }
 
-    public function testCreateTime_withDifferentDateFormats_shouldWork()
+    public function testCreateTimeWithDifferentDateFormatsShouldWork(): void
     {
         $device = new Device();
 
@@ -247,7 +297,7 @@ class DeviceTest extends TestCase
         }
     }
 
-    public function testUpdateTime_withDifferentDateFormats_shouldWork()
+    public function testUpdateTimeWithDifferentDateFormatsShouldWork(): void
     {
         $device = new Device();
 
@@ -264,7 +314,7 @@ class DeviceTest extends TestCase
         }
     }
 
-    public function testToString_withNullName_shouldReturnCodeOnly()
+    public function testToStringWithNullNameShouldReturnCodeOnly(): void
     {
         $device = new Device();
         $reflection = new \ReflectionClass(Device::class);
@@ -276,10 +326,10 @@ class DeviceTest extends TestCase
         $device->setCode('DEVICE001');
         $device->setName(null);
 
-        $this->assertSame('DEVICE001 | ', (string)$device);
+        $this->assertSame('DEVICE001 | ', (string) $device);
     }
 
-    public function testToString_withEmptyName_shouldReturnCodeOnly()
+    public function testToStringWithEmptyNameShouldReturnCodeOnly(): void
     {
         $device = new Device();
         $reflection = new \ReflectionClass(Device::class);
@@ -291,17 +341,17 @@ class DeviceTest extends TestCase
         $device->setCode('DEVICE001');
         $device->setName('');
 
-        $this->assertSame('DEVICE001 | ', (string)$device);
+        $this->assertSame('DEVICE001 | ', (string) $device);
     }
 
-    public function testUserOperations_withLargeNumberOfUsers_shouldWork()
+    public function testUserOperationsWithLargeNumberOfUsersShouldWork(): void
     {
         $device = new Device();
         $users = [];
 
         // 添加100个用户
-        for ($i = 0; $i < 100; $i++) {
-            $user = $this->createMock(UserInterface::class);
+        for ($i = 0; $i < 100; ++$i) {
+            $user = $this->createUserForTesting('test_user_' . $i);
             $users[] = $user;
             $device->addUser($user);
         }
@@ -318,11 +368,11 @@ class DeviceTest extends TestCase
         $this->assertSame(0, $device->getUserCount());
     }
 
-    public function testRemoveUser_withNonExistentUser_shouldNotThrowException()
+    public function testRemoveUserWithNonExistentUserShouldNotThrowException(): void
     {
         $device = new Device();
-        $user1 = $this->createMock(UserInterface::class);
-        $user2 = $this->createMock(UserInterface::class);
+        $user1 = $this->createUserForTesting('test_user_1');
+        $user2 = $this->createUserForTesting('test_user_2');
 
         $device->addUser($user1);
         $this->assertCount(1, $device->getUsers());
@@ -332,24 +382,22 @@ class DeviceTest extends TestCase
         $this->assertCount(1, $device->getUsers()); // 应该保持不变
     }
 
-    public function testChainedSetters_shouldAllowCompleteConfiguration()
+    public function testChainedSettersShouldAllowCompleteConfiguration(): void
     {
         $device = new Device();
         $createTime = new \DateTimeImmutable();
         $updateTime = new \DateTimeImmutable();
 
-        $result = $device
-            ->setCode('CHAIN001')
-            ->setModel('ChainModel')
-            ->setName('ChainName')
-            ->setValid(true)
-            ->setRegIp('192.168.1.100');
-
-        // 单独设置时间字段，因为它们返回void
+        // 由于setter方法现在返回void，不再支持链式调用
+        $device->setCode('CHAIN001');
+        $device->setModel('ChainModel');
+        $device->setName('ChainName');
+        $device->setValid(true);
+        $device->setRegIp('192.168.1.100');
         $device->setCreateTime($createTime);
         $device->setUpdateTime($updateTime);
 
-        $this->assertSame($device, $result);
+        // 验证所有属性都已正确设置
         $this->assertSame('CHAIN001', $device->getCode());
         $this->assertSame('ChainModel', $device->getModel());
         $this->assertSame('ChainName', $device->getName());
@@ -357,5 +405,26 @@ class DeviceTest extends TestCase
         $this->assertSame('192.168.1.100', $device->getRegIp());
         $this->assertSame($createTime, $device->getCreateTime());
         $this->assertSame($updateTime, $device->getUpdateTime());
+    }
+
+    /** @return iterable<string, array{string, mixed}> */
+    public static function propertiesProvider(): iterable
+    {
+        yield 'code' => ['code', 'TEST001'];
+        yield 'model' => ['model', 'Test Model'];
+        yield 'name' => ['name', 'Test Device'];
+        yield 'valid' => ['valid', true];
+        yield 'regIp' => ['regIp', '192.168.1.1'];
+        yield 'deviceType' => ['deviceType', DeviceType::PHONE];
+        yield 'osVersion' => ['osVersion', 'iOS 15.0'];
+        yield 'brand' => ['brand', 'Apple'];
+        yield 'status' => ['status', DeviceStatus::ONLINE];
+        yield 'lastOnlineTime' => ['lastOnlineTime', new \DateTimeImmutable()];
+        yield 'lastIp' => ['lastIp', '192.168.1.2'];
+        yield 'fingerprint' => ['fingerprint', 'test-fingerprint'];
+        yield 'cpuCores' => ['cpuCores', 8];
+        yield 'memorySize' => ['memorySize', '8192'];
+        yield 'storageSize' => ['storageSize', '256000'];
+        yield 'remark' => ['remark', 'Test remark'];
     }
 }

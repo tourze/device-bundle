@@ -19,8 +19,11 @@ use EasyCorp\Bundle\EasyAdminBundle\Filter\BooleanFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\DateTimeFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\TextFilter;
 
+/**
+ * @extends AbstractCrudController<Device>
+ */
 #[AdminCrud(routePath: '/device/device', routeName: 'device_device')]
-class DeviceCrudController extends AbstractCrudController
+final class DeviceCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
@@ -33,55 +36,65 @@ class DeviceCrudController extends AbstractCrudController
             ->setEntityLabelInSingular('登录设备')
             ->setEntityLabelInPlural('登录设备')
             ->setPageTitle('index', '登录设备列表')
-            ->setPageTitle('detail', fn(Device $device) => sprintf('设备详情: %s', $device->getCode()))
-            ->setPageTitle('edit', fn(Device $device) => sprintf('编辑设备: %s', $device->getCode()))
+            ->setPageTitle('detail', fn (Device $device) => sprintf('设备详情: %s', $device->getCode()))
+            ->setPageTitle('edit', fn (Device $device) => sprintf('编辑设备: %s', $device->getCode()))
             ->setPageTitle('new', '添加设备')
             ->setHelp('index', '管理系统中的所有登录设备信息')
             ->setDefaultSort(['createTime' => 'DESC'])
-            ->setSearchFields(['code', 'model', 'name', 'regIp']);
+            ->setSearchFields(['code', 'model', 'name', 'regIp'])
+        ;
     }
 
     public function configureFields(string $pageName): iterable
     {
         yield IdField::new('id', 'ID')
             ->setMaxLength(9999)
-            ->hideOnForm();
+            ->hideOnForm()
+        ;
 
         yield TextField::new('code', '唯一编码')
-            ->setHelp('设备的唯一标识符');
+            ->setHelp('设备的唯一标识符')
+        ;
 
         yield TextField::new('model', '设备型号')
-            ->setHelp('设备的型号信息');
+            ->setHelp('设备的型号信息')
+        ;
 
         yield TextField::new('name', '设备名称')
-            ->setRequired(false);
+            ->setRequired(false)
+        ;
 
         yield TextField::new('regIp', '注册IP')
             ->setHelp('设备首次注册时的IP地址')
-            ->hideOnIndex();
+            ->hideOnIndex()
+        ;
 
         yield BooleanField::new('valid', '有效');
 
         // 用户关联字段仅在详情页显示
-        if ($pageName === Crud::PAGE_DETAIL) {
+        if (Crud::PAGE_DETAIL === $pageName) {
             yield AssociationField::new('users', '关联用户')
-                ->hideOnForm();
+                ->hideOnForm()
+            ;
         }
 
         // 用户数量字段仅在列表和详情页显示
-        if ($pageName === Crud::PAGE_INDEX || $pageName === Crud::PAGE_DETAIL) {
+        if (Crud::PAGE_INDEX === $pageName || Crud::PAGE_DETAIL === $pageName) {
             yield IntegerField::new('userCount', '用户数')
                 ->formatValue(function ($value, Device $entity) {
                     return $entity->getUserCount();
                 })
-                ->hideOnForm();
+                ->hideOnForm()
+            ;
         }
 
         yield DateTimeField::new('createTime', '创建时间')
-            ->hideOnForm();
+            ->hideOnForm()
+        ;
 
         yield DateTimeField::new('updateTime', '更新时间')
-            ->hideOnForm();
+            ->hideOnForm()
+        ;
     }
 
     public function configureFilters(Filters $filters): Filters
@@ -93,7 +106,8 @@ class DeviceCrudController extends AbstractCrudController
             ->add(TextFilter::new('regIp', '注册IP'))
             ->add(BooleanFilter::new('valid', '有效'))
             ->add(DateTimeFilter::new('createTime', '创建时间'))
-            ->add(DateTimeFilter::new('updateTime', '更新时间'));
+            ->add(DateTimeFilter::new('updateTime', '更新时间'))
+        ;
     }
 
     public function configureActions(Actions $actions): Actions
@@ -101,11 +115,6 @@ class DeviceCrudController extends AbstractCrudController
         return $actions
             // 添加详情操作到列表页
             ->add(Crud::PAGE_INDEX, Action::DETAIL)
-            // 重新排序操作按钮
-            ->reorder(Crud::PAGE_INDEX, [Action::DETAIL, Action::EDIT, Action::DELETE])
-            // 自定义操作标签
-            ->update(Crud::PAGE_DETAIL, Action::INDEX, function (Action $action) {
-                return $action->setLabel('返回列表');
-            });
+        ;
     }
 }

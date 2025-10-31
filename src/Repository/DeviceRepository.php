@@ -5,17 +5,32 @@ namespace DeviceBundle\Repository;
 use DeviceBundle\Entity\Device;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Tourze\PHPUnitSymfonyKernelTest\Attribute\AsRepository;
 
 /**
- * @method Device|null find($id, $lockMode = null, $lockVersion = null)
- * @method Device|null findOneBy(array $criteria, array $orderBy = null)
- * @method Device[]    findAll()
- * @method Device[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @extends ServiceEntityRepository<Device>
  */
+#[AsRepository(entityClass: Device::class)]
 class DeviceRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Device::class);
+    }
+
+    public function save(Device $entity, bool $flush = true): void
+    {
+        $this->getEntityManager()->persist($entity);
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function remove(Device $entity, bool $flush = true): void
+    {
+        $this->getEntityManager()->remove($entity);
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
     }
 }

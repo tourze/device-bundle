@@ -6,13 +6,12 @@ use DeviceBundle\Entity\Device;
 use DeviceBundle\Repository\DeviceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
-class DeviceService
+readonly class DeviceService
 {
     public function __construct(
-        private readonly DeviceRepository $deviceRepository,
-        private readonly EntityManagerInterface $entityManager,
-    )
-    {
+        private DeviceRepository $deviceRepository,
+        private EntityManagerInterface $entityManager,
+    ) {
     }
 
     /**
@@ -21,7 +20,7 @@ class DeviceService
     public function register(string $model, string $code): Device
     {
         $device = $this->deviceRepository->findOneBy(['code' => $code]);
-        if ($device === null) {
+        if (null === $device) {
             $device = new Device();
             $device->setCode($code);
             $device->setModel($model);

@@ -3,46 +3,55 @@
 namespace DeviceBundle\Tests\Service;
 
 use DeviceBundle\Service\AttributeControllerLoader;
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Routing\RouteCollection;
+use Tourze\PHPUnitSymfonyKernelTest\AbstractIntegrationTestCase;
 
-class AttributeControllerLoaderTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(AttributeControllerLoader::class)]
+#[RunTestsInSeparateProcesses]
+final class AttributeControllerLoaderTest extends AbstractIntegrationTestCase
 {
-    private AttributeControllerLoader $loader;
-
-    protected function setUp(): void
+    protected function onSetUp(): void
     {
-        $this->loader = new AttributeControllerLoader();
+        // 不需要额外的设置逻辑
     }
 
-    public function testSupports_shouldAlwaysReturnFalse()
+    public function testSupportsShouldAlwaysReturnFalse(): void
     {
-        $this->assertFalse($this->loader->supports('any_resource'));
-        $this->assertFalse($this->loader->supports(null));
-        $this->assertFalse($this->loader->supports([]));
-        $this->assertFalse($this->loader->supports(new \stdClass()));
+        $loader = self::getService(AttributeControllerLoader::class);
+        $this->assertFalse($loader->supports('any_resource'));
+        $this->assertFalse($loader->supports(null));
+        $this->assertFalse($loader->supports([]));
+        $this->assertFalse($loader->supports(new \stdClass()));
     }
 
-    public function testLoad_shouldReturnRouteCollection()
+    public function testLoadShouldReturnRouteCollection(): void
     {
-        $result = $this->loader->load('any_resource');
+        $loader = self::getService(AttributeControllerLoader::class);
+        $result = $loader->load('any_resource');
 
         $this->assertInstanceOf(RouteCollection::class, $result);
     }
 
-    public function testAutoload_shouldReturnRouteCollection()
+    public function testAutoloadShouldReturnRouteCollection(): void
     {
-        $result = $this->loader->autoload();
+        $loader = self::getService(AttributeControllerLoader::class);
+        $result = $loader->autoload();
 
         $this->assertInstanceOf(RouteCollection::class, $result);
     }
 
-    public function testAutoload_shouldIncludeDeviceCrudControllerRoutes()
+    public function testAutoloadShouldIncludeDeviceCrudControllerRoutes(): void
     {
         // 这个测试比较复杂，需要模拟AttributeRouteControllerLoader的行为
         // 由于我们无法轻易地测试内部实现细节，我们至少可以确认返回值是RouteCollection类型
 
-        $result = $this->loader->autoload();
+        $loader = self::getService(AttributeControllerLoader::class);
+        $result = $loader->autoload();
 
         $this->assertInstanceOf(RouteCollection::class, $result);
 

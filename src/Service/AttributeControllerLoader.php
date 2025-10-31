@@ -36,6 +36,7 @@ class AttributeControllerLoader extends Loader implements RoutingAutoLoaderInter
         $collection = new RouteCollection();
         $collection->addCollection($this->controllerLoader->load(DeviceCrudController::class));
         $collection->addCollection($this->controllerLoader->load(LoginLogCrudController::class));
+
         return $collection;
     }
 }

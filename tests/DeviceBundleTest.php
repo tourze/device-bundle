@@ -1,24 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DeviceBundle\Tests;
 
 use DeviceBundle\DeviceBundle;
-use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Tourze\PHPUnitSymfonyKernelTest\AbstractBundleTestCase;
 
-class DeviceBundleTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(DeviceBundle::class)]
+#[RunTestsInSeparateProcesses]
+final class DeviceBundleTest extends AbstractBundleTestCase
 {
-    public function testBundle_shouldExtendSymfonyBundle()
-    {
-        $bundle = new DeviceBundle();
-        $this->assertInstanceOf(Bundle::class, $bundle);
-    }
-
-    public function testGetPath_shouldReturnValidPath()
-    {
-        $bundle = new DeviceBundle();
-        $path = $bundle->getPath();
-        $this->assertDirectoryExists($path);
-        $this->assertStringContainsString('device-bundle', $path);
-    }
 }

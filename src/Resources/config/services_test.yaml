@@ -3,13 +3,7 @@ services:
   _defaults:
     autowire: true      # Automatically injects dependencies in your services.
     autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
-
-  DeviceBundle\Controller\:
-    resource: '../../Controller/'
-  DeviceBundle\Repository\:
-    resource: '../../Repository/'
-  DeviceBundle\Service\:
-    resource: '../../Service/'
-    
-  DeviceBundle\Service\AdminMenu:
     public: true
+
+  DeviceBundle\DataFixtures\:
+    resource: '../../DataFixtures/'
