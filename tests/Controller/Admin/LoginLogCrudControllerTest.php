@@ -34,8 +34,7 @@ final class LoginLogCrudControllerTest extends AbstractEasyAdminControllerTestCa
      */
     public function testNewActionIsCorrectlyDisabled(): void
     {
-        $client = self::createClientWithDatabase();
-        $this->loginAsAdmin($client);
+        $client = self::createAuthenticatedClient();
 
         // 验证NEW动作被禁用
         try {
@@ -66,8 +65,7 @@ final class LoginLogCrudControllerTest extends AbstractEasyAdminControllerTestCa
      */
     public function testEditActionIsCorrectlyDisabled(): void
     {
-        $client = self::createClientWithDatabase();
-        $this->loginAsAdmin($client);
+        $client = self::createAuthenticatedClient();
 
         $loginLog = $this->createTestLoginLog();
 
@@ -142,8 +140,7 @@ final class LoginLogCrudControllerTest extends AbstractEasyAdminControllerTestCa
 
     public function testLoginLogListPageAccess(): void
     {
-        $client = self::createClientWithDatabase();
-        $this->loginAsAdmin($client);
+        $client = self::createAuthenticatedClient();
 
         $crawler = $client->request('GET', '/admin/device/login-log');
 
@@ -153,8 +150,7 @@ final class LoginLogCrudControllerTest extends AbstractEasyAdminControllerTestCa
 
     public function testLoginLogListPageStructure(): void
     {
-        $client = self::createClientWithDatabase();
-        $this->loginAsAdmin($client);
+        $client = self::createAuthenticatedClient();
 
         $crawler = $client->request('GET', '/admin/device/login-log');
 
@@ -165,8 +161,7 @@ final class LoginLogCrudControllerTest extends AbstractEasyAdminControllerTestCa
 
     public function testLoginLogDetailPageAccess(): void
     {
-        $client = self::createClientWithDatabase();
-        $this->loginAsAdmin($client);
+        $client = self::createAuthenticatedClient();
 
         $loginLog = $this->createTestLoginLog();
 
@@ -186,8 +181,7 @@ final class LoginLogCrudControllerTest extends AbstractEasyAdminControllerTestCa
 
     public function testLoginLogDeleteAction(): void
     {
-        $client = self::createClientWithDatabase();
-        $this->loginAsAdmin($client);
+        $client = self::createAuthenticatedClient();
 
         $loginLog = $this->createTestLoginLog();
 
@@ -199,8 +193,7 @@ final class LoginLogCrudControllerTest extends AbstractEasyAdminControllerTestCa
 
     public function testLoginLogSearchFunctionality(): void
     {
-        $client = self::createClientWithDatabase();
-        $this->loginAsAdmin($client);
+        $client = self::createAuthenticatedClient();
 
         $loginLog = $this->createTestLoginLog();
 
@@ -215,8 +208,7 @@ final class LoginLogCrudControllerTest extends AbstractEasyAdminControllerTestCa
 
     public function testLoginLogIpFilterFunctionality(): void
     {
-        $client = self::createClientWithDatabase();
-        $this->loginAsAdmin($client);
+        $client = self::createAuthenticatedClient();
 
         $loginLog = $this->createTestLoginLog();
 
@@ -234,8 +226,7 @@ final class LoginLogCrudControllerTest extends AbstractEasyAdminControllerTestCa
 
     public function testLoginLogPlatformFilterFunctionality(): void
     {
-        $client = self::createClientWithDatabase();
-        $this->loginAsAdmin($client);
+        $client = self::createAuthenticatedClient();
 
         $loginLog = $this->createTestLoginLog();
 
@@ -253,8 +244,7 @@ final class LoginLogCrudControllerTest extends AbstractEasyAdminControllerTestCa
 
     public function testLoginLogDateTimeFilterFunctionality(): void
     {
-        $client = self::createClientWithDatabase();
-        $this->loginAsAdmin($client);
+        $client = self::createAuthenticatedClient();
 
         $loginLog = $this->createTestLoginLog();
 
@@ -286,8 +276,7 @@ final class LoginLogCrudControllerTest extends AbstractEasyAdminControllerTestCa
 
     public function testLoginLogNoCreateAction(): void
     {
-        $client = self::createClientWithDatabase();
-        $this->loginAsAdmin($client);
+        $client = self::createAuthenticatedClient();
 
         $crawler = $client->request('GET', '/admin/device/login-log');
 
@@ -297,8 +286,7 @@ final class LoginLogCrudControllerTest extends AbstractEasyAdminControllerTestCa
 
     public function testLoginLogNoEditAction(): void
     {
-        $client = self::createClientWithDatabase();
-        $this->loginAsAdmin($client);
+        $client = self::createAuthenticatedClient();
 
         $loginLog = $this->createTestLoginLog();
 
@@ -314,8 +302,7 @@ final class LoginLogCrudControllerTest extends AbstractEasyAdminControllerTestCa
      */
     public function testValidationErrors(): void
     {
-        $client = self::createClientWithDatabase();
-        $this->loginAsAdmin($client);
+        $client = self::createAuthenticatedClient();
 
         // 测试NEW操作被正确禁用
         try {

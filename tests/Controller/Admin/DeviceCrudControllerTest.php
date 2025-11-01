@@ -90,8 +90,7 @@ final class DeviceCrudControllerTest extends AbstractEasyAdminControllerTestCase
 
     public function testDeviceListPageAccess(): void
     {
-        $client = self::createClientWithDatabase();
-        $this->loginAsAdmin($client);
+        $client = self::createAuthenticatedClient();
 
         $crawler = $client->request('GET', '/admin/device/device');
 
@@ -101,8 +100,7 @@ final class DeviceCrudControllerTest extends AbstractEasyAdminControllerTestCase
 
     public function testDeviceListPageStructure(): void
     {
-        $client = self::createClientWithDatabase();
-        $this->loginAsAdmin($client);
+        $client = self::createAuthenticatedClient();
 
         $crawler = $client->request('GET', '/admin/device/device');
 
@@ -113,8 +111,7 @@ final class DeviceCrudControllerTest extends AbstractEasyAdminControllerTestCase
 
     public function testDeviceNewPageAccess(): void
     {
-        $client = self::createClientWithDatabase();
-        $this->loginAsAdmin($client);
+        $client = self::createAuthenticatedClient();
 
         $crawler = $client->request('GET', '/admin/device/device/new');
 
@@ -144,8 +141,7 @@ final class DeviceCrudControllerTest extends AbstractEasyAdminControllerTestCase
 
     public function testDeviceEditPageAccess(): void
     {
-        $client = self::createClientWithDatabase();
-        $this->loginAsAdmin($client);
+        $client = self::createAuthenticatedClient();
 
         $device = $this->createTestDevice();
 
@@ -158,8 +154,7 @@ final class DeviceCrudControllerTest extends AbstractEasyAdminControllerTestCase
 
     public function testDeviceDetailPageAccess(): void
     {
-        $client = self::createClientWithDatabase();
-        $this->loginAsAdmin($client);
+        $client = self::createAuthenticatedClient();
 
         $device = $this->createTestDevice();
 
@@ -181,8 +176,7 @@ final class DeviceCrudControllerTest extends AbstractEasyAdminControllerTestCase
 
     public function testDeviceSearchFunctionality(): void
     {
-        $client = self::createClientWithDatabase();
-        $this->loginAsAdmin($client);
+        $client = self::createAuthenticatedClient();
 
         $device = $this->createTestDevice();
 
@@ -194,8 +188,7 @@ final class DeviceCrudControllerTest extends AbstractEasyAdminControllerTestCase
 
     public function testDeviceFilterFunctionality(): void
     {
-        $client = self::createClientWithDatabase();
-        $this->loginAsAdmin($client);
+        $client = self::createAuthenticatedClient();
 
         $device = $this->createTestDevice();
 
