@@ -20,7 +20,6 @@ class LoginLog implements \Stringable
 {
     use CreateTimeAware;
 
-    /** @phpstan-ignore-next-line property.unusedType */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(options: ['comment' => 'ID'])]
