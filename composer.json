@@ -38,6 +38,7 @@
     "tourze/symfony-schedule-entity-clean-bundle": "1.0.*"
   },
   "require-dev": {
+    "fakerphp/faker": "^1.23",
     "phpstan/phpstan": "^2.1",
     "phpunit/phpunit": "^11.5",
     "tourze/doctrine-resolve-target-entity-bundle": "1.*",

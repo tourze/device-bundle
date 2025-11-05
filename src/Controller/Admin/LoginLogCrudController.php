@@ -23,7 +23,6 @@ use Tourze\OperationSystemEnum\Platform;
 
 /**
  * @extends AbstractCrudController<LoginLog>
- * @phpstan-ignore missingFieldValidationTest (NEW and EDIT actions are disabled, no validation needed)
  */
 #[AdminCrud(routePath: '/device/login-log', routeName: 'device_login_log')]
 final class LoginLogCrudController extends AbstractCrudController
