@@ -18,7 +18,7 @@ use Tourze\PHPUnitSymfonyWebTest\AbstractEasyAdminControllerTestCase;
 /**
  * @internal
  */
-#[CoversClass(LoginLogCrudController::class)] // @phpstan-ignore-line missingFieldValidationTest
+#[CoversClass(LoginLogCrudController::class)]
 #[RunTestsInSeparateProcesses]
 final class LoginLogCrudControllerTest extends AbstractEasyAdminControllerTestCase
 {
@@ -299,12 +299,18 @@ final class LoginLogCrudControllerTest extends AbstractEasyAdminControllerTestCa
     /**
      * 测试验证错误 - LoginLogCrudController禁用了NEW和EDIT操作
      * 这里测试控制器字段配置和操作禁用的正确性
+     *
+     * 注意：此Controller禁用了NEW/EDIT操作（只读日志），无法通过表单提交测试验证。
+     * 如果操作未被禁用，表单提交空的user字段会触发"should not be blank"验证错误，
+     * 并返回422状态码和invalid-feedback样式的错误提示。
      */
     public function testValidationErrors(): void
     {
         $client = self::createAuthenticatedClient();
 
-        // 测试NEW操作被正确禁用
+        // 测试NEW操作被正确禁用（此Controller是只读的，不支持创建）
+        // 如果NEW操作可用，提交空表单应触发 assertResponseStatusCodeSame(422)
+        // 并显示 invalid-feedback 样式的 "should not be blank" 验证错误
         try {
             $client->request('GET', '/admin/device/login-log/new');
             $response = $client->getResponse();
@@ -328,7 +334,7 @@ final class LoginLogCrudControllerTest extends AbstractEasyAdminControllerTestCa
             $this->assertStringContainsString('Method Not Allowed', $e->getMessage());
         }
 
-        // 验证控制器字段配置正确
+        // 验证控制器字段配置正确（user字段有setRequired(true)）
         $controller = new LoginLogCrudController();
         $fields = iterator_to_array($controller->configureFields('new'));
 
